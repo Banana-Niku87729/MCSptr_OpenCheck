@@ -1,0 +1,28 @@
+{
+  "name": "minecraft-world-checker",
+  "version": "1.0.0",
+  "description": "Minecraft統合版ワールド開放状況チェッカー",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "ws": "^8.14.2",
+    "@octokit/rest": "^20.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "minecraft",
+    "bedrock",
+    "websocket",
+    "github"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}
