@@ -27,29 +27,42 @@ class MinecraftWorldChecker {
     
     connectWebSocket() {
         try {
-            this.ws = new WebSocket(`ws://${this.config.minecraft.host}:${this.config.minecraft.port}`);
+            // Minecraft統合版のWebSocket接続はローカルホストまたは直接IPを使用
+            // Renderから外部のMinecraftサーバーには直接接続できない可能性があります
+            const wsUrl = `ws://localhost:${this.config.minecraft.port}`;
+            console.log(`WebSocket接続試行: ${wsUrl}`);
+            
+            this.ws = new WebSocket(wsUrl);
             
             this.ws.on('open', () => {
                 console.log('WebSocket接続成功');
-                this.sendCommand('subscribe', 'PlayerMessage');
+                // Minecraft統合版用の初期化
+                this.initializeMinecraftConnection();
             });
             
             this.ws.on('message', (data) => {
-                this.handleMessage(JSON.parse(data.toString()));
+                try {
+                    const message = JSON.parse(data.toString());
+                    this.handleMessage(message);
+                } catch (error) {
+                    console.error('メッセージパースエラー:', error);
+                }
             });
             
-            this.ws.on('close', () => {
-                console.log('WebSocket切断 - 再接続中...');
+            this.ws.on('close', (code, reason) => {
+                console.log(`WebSocket切断 (${code}): ${reason} - 再接続中...`);
                 setTimeout(() => this.connectWebSocket(), this.reconnectInterval);
             });
             
             this.ws.on('error', (error) => {
                 console.error('WebSocket エラー:', error);
+                // 接続が失敗した場合は代替手段を試行
+                this.tryAlternativeConnection();
             });
             
         } catch (error) {
             console.error('WebSocket接続失敗:', error);
-            setTimeout(() => this.connectWebSocket(), this.reconnectInterval);
+            this.tryAlternativeConnection();
         }
     }
     
