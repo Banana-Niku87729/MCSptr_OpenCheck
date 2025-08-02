@@ -70,10 +70,10 @@ class MinecraftWorldChecker {
     
     checkWorldStatus() {
         // scoreboardのmente値をチェック
-        this.sendMinecraftCommand('testfor @e[name=mente,scores={score=0}]');
+        this.sendMinecraftCommand('testfor @e[name=Bananakundao,scores={mente=0}]');
         
         setTimeout(() => {
-            this.sendMinecraftCommand('testfor @e[name=mente,scores={score=1}]');
+            this.sendMinecraftCommand('testfor @e[name=Bananakundao,scores={mente=1}]');
         }, 1000);
     }
     
